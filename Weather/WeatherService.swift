@@ -1,18 +1,43 @@
-//
-//  WeatherService.swift
-//  Weather
-//
-//  Fetches forecast from Open-Meteo (free, no API key).
-//
 
 import Foundation
 
 enum WeatherService {
 
+    /// Avoids `waitsForConnectivity` (default `true` on many OS versions), which can sit ~1–2s after Wi‑Fi/cellular toggles before firing.
+    private static let apiSession: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.waitsForConnectivity = false
+        config.timeoutIntervalForRequest = 25
+        config.timeoutIntervalForResource = 45
+        return URLSession(configuration: config)
+    }()
+
+    /// Typical connectivity / reachability failures (for offline-style UI).
+    static func isLikelyConnectivityFailure(_ error: Error) -> Bool {
+        guard let urlError = error as? URLError else { return false }
+        switch urlError.code {
+        case .notConnectedToInternet, .networkConnectionLost, .cannotConnectToHost,
+             .dnsLookupFailed, .dataNotAllowed, .internationalRoamingOff, .timedOut:
+            return true
+        default:
+            return false
+        }
+    }
+
+    /// 16-point compass label for wind direction in degrees.
+    static func windDirectionAbbreviation(degrees: Int?) -> String? {
+        guard let d = degrees else { return nil }
+        let names = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        var x = Double(d).truncatingRemainder(dividingBy: 360)
+        if x < 0 { x += 360 }
+        let idx = Int((x + 11.25) / 22.5) % 16
+        return names[idx]
+    }
+
     /// Current conditions, daily outlook, and hourly series.
     static func fetchForecast(latitude: Double, longitude: Double, timeZoneIdentifier: String) async throws -> WeatherForecast {
         let url = forecastURL(latitude: latitude, longitude: longitude, timeZoneIdentifier: timeZoneIdentifier)
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await apiSession.data(from: url)
         guard let http = response as? HTTPURLResponse, (200 ... 299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
         }
@@ -34,7 +59,7 @@ enum WeatherService {
         ]
         guard let url = components.url else { throw URLError(.badURL) }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await apiSession.data(from: url)
         guard let http = response as? HTTPURLResponse, (200 ... 299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
         }

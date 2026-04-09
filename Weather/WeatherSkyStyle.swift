@@ -1,9 +1,3 @@
-//
-//  WeatherSkyStyle.swift
-//  Weather
-//
-//  Sky gradients from WMO weather code, day/night, and temperature (°F).
-//
 
 import SwiftUI
 

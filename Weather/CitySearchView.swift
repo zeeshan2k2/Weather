@@ -1,7 +1,3 @@
-//
-//  CitySearchView.swift
-//  Weather
-//
 
 import SwiftUI
 
@@ -13,6 +9,8 @@ struct CitySearchView: View {
     @State private var searchText = ""
     @State private var results: [GeocodingPlace] = []
     @State private var isSearching = false
+    /// Last completed search failed due to connectivity (don’t show “No matches”).
+    @State private var lastSearchFailedOffline = false
 
     private var trimmedQuery: String {
         searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -23,7 +21,11 @@ struct CitySearchView: View {
     }
 
     private var showNoResults: Bool {
-        trimmedQuery.count >= 2 && !isSearching && results.isEmpty
+        trimmedQuery.count >= 2 && !isSearching && results.isEmpty && !lastSearchFailedOffline
+    }
+
+    private var showOfflineSearch: Bool {
+        trimmedQuery.count >= 2 && !isSearching && lastSearchFailedOffline
     }
 
     var body: some View {
@@ -49,6 +51,13 @@ struct CitySearchView: View {
                                 subtitle: "Enter at least two letters to search cities and towns worldwide."
                             )
                             .padding(.top, 32)
+                        } else if showOfflineSearch {
+                            CitySearchEmptyState(
+                                icon: "wifi.slash",
+                                title: "No internet connection",
+                                subtitle: "Connect to Wi‑Fi or mobile data to search for places, then try again."
+                            )
+                            .padding(.top, 28)
                         } else if showNoResults {
                             CitySearchEmptyState(
                                 icon: "location.slash",
@@ -114,6 +123,7 @@ struct CitySearchView: View {
         let trimmed = trimmedQuery
         if trimmed.count < 2 {
             results = []
+            lastSearchFailedOffline = false
             isSearching = false
             return
         }
@@ -125,8 +135,12 @@ struct CitySearchView: View {
         defer { isSearching = false }
         do {
             results = try await WeatherService.searchPlaces(name: latest)
+            lastSearchFailedOffline = false
         } catch {
+            if error is CancellationError { return }
+            if (error as? URLError)?.code == .cancelled { return }
             results = []
+            lastSearchFailedOffline = WeatherService.isLikelyConnectivityFailure(error)
         }
     }
 }
