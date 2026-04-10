@@ -1,9 +1,3 @@
-//
-//  WeatherDay.swift
-//  Weather
-//
-//  Single-day summary for dashboard strips and day-detail sheet (domain, not JSON).
-//
 
 import Foundation
 

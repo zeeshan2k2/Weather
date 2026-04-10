@@ -1,9 +1,3 @@
-//
-//  DayDetailScreenViews.swift
-//  Weather
-//
-//  Day-detail–only UI pieces (hero, metrics, hourly strip, sun pills).
-//
 
 import SwiftUI
 
@@ -119,13 +113,28 @@ struct DayDetailAtAGlanceSection: View {
 
             VStack(alignment: .leading, spacing: 16) {
                 if let precip = summary.precipitationProbabilityMax {
-                    DayDetailMetricRow(icon: "drop.fill", title: "Precipitation chance", value: "\(precip)%")
+                    DayDetailMetricRow(
+                        icon: "drop.fill",
+                        title: "Precipitation chance",
+                        value: "\(precip)%",
+                        iconStyle: .precipitation
+                    )
                 }
                 if let humidityPercent {
-                    DayDetailMetricRow(icon: "humidity.fill", title: "Humidity (now)", value: "\(humidityPercent)%")
+                    DayDetailMetricRow(
+                        icon: "humidity.fill",
+                        title: "Humidity (now)",
+                        value: "\(humidityPercent)%",
+                        iconStyle: .humidity
+                    )
                 }
                 if let mph = windSpeedMph {
-                    DayDetailMetricRow(icon: "wind", title: "Wind (now)", value: String(format: "%.0f mph", mph))
+                    DayDetailMetricRow(
+                        icon: "wind",
+                        title: "Wind (now)",
+                        value: String(format: "%.0f mph", mph),
+                        iconStyle: .wind
+                    )
                 }
             }
             .padding(22)
@@ -151,12 +160,11 @@ struct DayDetailMetricRow: View {
     let icon: String
     let title: String
     let value: String
+    let iconStyle: WeatherMetricIconStyle
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(.white.opacity(0.9))
+            WeatherMetricSymbolImage(systemName: icon, size: 16, weight: .semibold, style: iconStyle)
                 .frame(width: 22)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)

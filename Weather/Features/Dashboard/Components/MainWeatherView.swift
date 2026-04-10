@@ -11,13 +11,14 @@ struct MainWeatherView: View {
     var feelsLike: Int? = nil
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 0) {
             Image(systemName: imageName)
                 .renderingMode(.original)
-            // almost always have to use the resizable
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 180, height: 180)
+                .frame(width: 160, height: 160)
+                .frame(height: 160, alignment: .top)
+                .clipped()
 
             // Single block so spacing is even; large temp font still carries extra
             // line metrics below the digits — trim that so condition sits closer.

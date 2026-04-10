@@ -5,6 +5,8 @@ struct WeatherDashboardView: View {
 
     private let forecastRepository: any ForecastRepository
 
+    @StateObject private var locationProvider = WeatherLocationProvider()
+
     @AppStorage("weatherCityName") private var storedCityName = "Cupertino, CA"
     @AppStorage("weatherLatitude") private var storedLatitudeString = "37.3230"
     @AppStorage("weatherLongitude") private var storedLongitudeString = "-122.0322"
@@ -19,6 +21,8 @@ struct WeatherDashboardView: View {
     @State private var showCitySearch = false
     @State private var useCelsius = false
     @State private var dayDetailSelection: WeatherDay?
+    @State private var isFetchingLocation = false
+    @State private var locationErrorMessage: String?
 
     private var selectedLatitude: Double {
         Double(storedLatitudeString) ?? 37.3230
@@ -110,7 +114,7 @@ struct WeatherDashboardView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.bottom, 80)
+                        .padding(.bottom, 40)
                     }
                     .refreshable {
                         await model.loadForecast(
@@ -133,19 +137,35 @@ struct WeatherDashboardView: View {
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showCitySearch = true
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(.white)
-                            .shadow(
-                                color: DashboardChromeMetrics.chromeButtonShadow.color,
-                                radius: DashboardChromeMetrics.chromeButtonShadow.radius,
-                                y: DashboardChromeMetrics.chromeButtonShadow.y
-                            )
+                    HStack(spacing: 14) {
+                        Button {
+                            Task { await useCurrentLocationTapped() }
+                        } label: {
+                            Group {
+                                if isFetchingLocation {
+                                    ProgressView()
+                                        .scaleEffect(0.85)
+                                        .tint(.white.opacity(0.95))
+                                } else {
+                                    Image(systemName: "location.circle.fill")
+                                        .font(.title3.weight(.semibold))
+                                        .dashboardToolbarGlyphChrome()
+                                }
+                            }
+                            .frame(minWidth: 28, minHeight: 28)
+                        }
+                        .disabled(isFetchingLocation)
+                        .accessibilityLabel("Current location")
+
+                        Button {
+                            showCitySearch = true
+                        } label: {
+                            Image(systemName: "magnifyingglass")
+                                .font(.title3.weight(.semibold))
+                                .dashboardToolbarGlyphChrome()
+                        }
+                        .accessibilityLabel("Search city")
                     }
-                    .accessibilityLabel("Search city")
                 }
             }
             .sheet(isPresented: $showCitySearch) {
@@ -194,6 +214,31 @@ struct WeatherDashboardView: View {
                 }
             )
             .padding(.top, 0)
+        }
+        .alert("Location", isPresented: Binding(
+            get: { locationErrorMessage != nil },
+            set: { if !$0 { locationErrorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) { locationErrorMessage = nil }
+        } message: {
+            Text(locationErrorMessage ?? "")
+        }
+    }
+
+    private func useCurrentLocationTapped() async {
+        guard !isFetchingLocation else { return }
+        isFetchingLocation = true
+        defer { isFetchingLocation = false }
+        do {
+            let place = try await locationProvider.resolveCurrentPlace()
+            storedLatitudeString = String(place.latitude)
+            storedLongitudeString = String(place.longitude)
+            storedTimezone = place.timeZoneIdentifier
+            storedCityName = place.cityLine
+        } catch let error as WeatherLocationError {
+            locationErrorMessage = error.localizedDescription
+        } catch {
+            locationErrorMessage = error.localizedDescription
         }
     }
 }

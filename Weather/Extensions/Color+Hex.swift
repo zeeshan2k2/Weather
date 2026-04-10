@@ -1,7 +1,3 @@
-//
-//  Color+Hex.swift
-//  Weather
-//
 
 import SwiftUI
 

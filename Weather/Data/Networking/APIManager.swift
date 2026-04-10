@@ -1,7 +1,3 @@
-//
-//  APIManager.swift
-//  Weather
-//
 
 import Foundation
 

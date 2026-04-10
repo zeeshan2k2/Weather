@@ -1,9 +1,3 @@
-//
-//  ForecastModels.swift
-//  Weather
-//
-//  Domain models consumed by SwiftUI (not JSON shapes).
-//
 
 import Foundation
 

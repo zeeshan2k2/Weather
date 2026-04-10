@@ -1,9 +1,3 @@
-//
-//  DashboardScreenViews.swift
-//  Weather
-//
-//  Dashboard-only UI pieces (failure state, retry, strips, stats).
-//
 
 import SwiftUI
 
@@ -54,11 +48,22 @@ struct DashboardLoadFailureView: View {
 
 enum DashboardChromeMetrics {
     static let chromeButtonShadow = (color: Color.black.opacity(0.42), radius: CGFloat(5), y: CGFloat(2))
+    /// Same frosted language as `WeatherForecastStripsPanel` (flat glass, not “3D” chrome).
+    static let glassSurfaceGradient = LinearGradient(
+        colors: [
+            Color.white.opacity(0.26),
+            Color.white.opacity(0.07),
+        ],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    static let glassSurfaceStroke = Color.white.opacity(0.42)
+    /// One soft shadow for toolbar glyphs and unit label (minimal vs. layered crisp+soft).
+    static let minimalChromeShadow = (color: Color.black.opacity(0.26), radius: CGFloat(2), y: CGFloat(1))
+    /// Lighter than `chromeButtonShadow` so floating pills don’t look embossed.
+    static let floatingGlassShadow = (color: Color.black.opacity(0.2), radius: CGFloat(4), y: CGFloat(1.5))
     static let chromeFill = Color.white.opacity(0.42)
     static let chromeStroke = Color.white.opacity(0.55)
-    /// Stronger than `chromeFill` so the floating unit pill stays legible on bright sky gradients.
-    static let unitToggleCapsuleFill = Color.white.opacity(0.68)
-    static let unitToggleCapsuleStroke = Color.white.opacity(0.78)
     static let retrySlotSize: CGFloat = 44
 }
 
@@ -135,37 +140,64 @@ struct DashboardTopRetryControl: View {
 struct DashboardUnitToggleButton: View {
     @Binding var useCelsius: Bool
 
+    private var label: String { useCelsius ? "°C" : "°F" }
+
     var body: some View {
         Button {
             useCelsius.toggle()
         } label: {
-            HStack(spacing: 4) {
-                Text("°")
-                    .font(.system(size: 18, weight: .semibold, design: .rounded))
-                Text(useCelsius ? "C" : "F")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .frame(minWidth: 18, alignment: .center)
-            }
-            .foregroundStyle(.white)
-            .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 11)
-            .background {
-                Capsule()
-                    .fill(DashboardChromeMetrics.unitToggleCapsuleFill)
-                    .overlay(
-                        Capsule()
-                            .strokeBorder(DashboardChromeMetrics.unitToggleCapsuleStroke, lineWidth: 1.25)
+            Text(label)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule().fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.82),
+                                Color.white.opacity(0.52),
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
                     )
-            }
-            .shadow(
-                color: DashboardChromeMetrics.chromeButtonShadow.color,
-                radius: DashboardChromeMetrics.chromeButtonShadow.radius,
-                y: DashboardChromeMetrics.chromeButtonShadow.y
-            )
+                )
+                .overlay(
+                    Capsule()
+                        .strokeBorder(Color.white.opacity(0.45), lineWidth: 0.75)
+                )
+                .mask(alignment: .center) {
+                    // Knockout: solid capsule minus the text shape.
+                    Rectangle()
+                        .overlay(alignment: .center) {
+                            Text(label)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .blendMode(.destinationOut)
+                        }
+                }
+                .compositingGroup()
+                .shadow(
+                    color: DashboardChromeMetrics.floatingGlassShadow.color,
+                    radius: DashboardChromeMetrics.floatingGlassShadow.radius,
+                    y: DashboardChromeMetrics.floatingGlassShadow.y
+                )
         }
         .buttonStyle(.plain)
         .accessibilityLabel(useCelsius ? "Use Fahrenheit" : "Use Celsius")
+    }
+}
+
+extension View {
+    /// Flat white SF Symbol + one soft shadow (matches frosted dashboard glass).
+    func dashboardToolbarGlyphChrome() -> some View {
+        foregroundStyle(Color.white.opacity(0.95))
+            .shadow(
+                color: DashboardChromeMetrics.minimalChromeShadow.color,
+                radius: DashboardChromeMetrics.minimalChromeShadow.radius,
+                y: DashboardChromeMetrics.minimalChromeShadow.y
+            )
     }
 }
 
@@ -197,22 +229,26 @@ struct DashboardWeatherStatsGrid: View {
             WeatherStatTile(
                 icon: "thermometer.medium",
                 title: "Feels like",
-                value: "\(DashboardTemperature.display(fahrenheit: feelsLikeF, useCelsius: useCelsius))°\(unitSuffix)"
+                value: "\(DashboardTemperature.display(fahrenheit: feelsLikeF, useCelsius: useCelsius))°\(unitSuffix)",
+                iconStyle: .feelsLike
             )
             WeatherStatTile(
                 icon: "humidity.fill",
                 title: "Humidity",
-                value: humidityPercent.map { "\($0)%" } ?? "—"
+                value: humidityPercent.map { "\($0)%" } ?? "—",
+                iconStyle: .humidity
             )
             WeatherStatTile(
                 icon: "wind",
                 title: "Wind",
-                value: windValue
+                value: windValue,
+                iconStyle: .wind
             )
             WeatherStatTile(
                 icon: "drop.fill",
                 title: "Precipitation",
-                value: DashboardTemperature.precipitationTileValue(mm: precipitationMm, todayChancePercent: todayPrecipitationChance)
+                value: DashboardTemperature.precipitationTileValue(mm: precipitationMm, todayChancePercent: todayPrecipitationChance),
+                iconStyle: .precipitation
             )
         }
         .padding(.horizontal, 20)

@@ -1,7 +1,3 @@
-//
-//  ForecastRepository.swift
-//  Weather
-//
 
 import Foundation
 

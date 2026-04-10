@@ -1,9 +1,3 @@
-//
-//  ForecastRemoteDTOs.swift
-//  Weather
-//
-//  Remote JSON → domain mapping. Schema matches the app’s current forecast + place-search HTTP APIs.
-//
 
 import Foundation
 

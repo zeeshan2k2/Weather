@@ -1,7 +1,3 @@
-//
-//  ForecastValueTypes.swift
-//  Weather
-//
 
 import Foundation
 

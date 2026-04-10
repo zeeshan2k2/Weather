@@ -1,9 +1,3 @@
-//
-//  CitySearchModel.swift
-//  Weather
-//
-//  Debounced place search + result state; `CitySearchView` wires UI.
-//
 
 import Combine
 import Foundation

@@ -1,9 +1,3 @@
-//
-//  CitySearchScreenViews.swift
-//  Weather
-//
-//  City search–only UI (empty states, result rows, chrome).
-//
 
 import SwiftUI
 

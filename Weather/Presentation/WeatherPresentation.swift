@@ -1,9 +1,3 @@
-//
-//  WeatherPresentation.swift
-//  Weather
-//
-//  WMO / Open‑Meteo → strings & symbols for SwiftUI. Not networking.
-//
 
 import Foundation
 

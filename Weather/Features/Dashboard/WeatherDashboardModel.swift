@@ -1,9 +1,3 @@
-//
-//  WeatherDashboardModel.swift
-//  Weather
-//
-//  Forecast load state + mapping; location persistence stays in the view (`@AppStorage`).
-//
 
 import Combine
 import Foundation

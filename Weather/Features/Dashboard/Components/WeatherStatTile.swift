@@ -6,6 +6,7 @@ struct WeatherStatTile: View {
     var icon: String
     var title: String
     var value: String
+    var iconStyle: WeatherMetricIconStyle
 
     private var cellShape: RoundedRectangle {
         RoundedRectangle(cornerRadius: 14, style: .continuous)
@@ -14,9 +15,7 @@ struct WeatherStatTile: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.88))
+                WeatherMetricSymbolImage(systemName: icon, size: 14, weight: .semibold, style: iconStyle)
                     .frame(width: 18, alignment: .center)
                 Text(title)
                     .font(.system(size: 13, weight: .medium, design: .rounded))

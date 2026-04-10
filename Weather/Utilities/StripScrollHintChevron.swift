@@ -1,9 +1,3 @@
-//
-//  StripScrollHintChevron.swift
-//  Weather
-//
-//  Trailing hint for horizontal forecast strips (non-interactive).
-//
 
 import SwiftUI
 
@@ -19,7 +13,8 @@ struct StripScrollHintChevron: View {
     private static let highlightBarWidth: CGFloat = 48
     private static let chevronGap: CGFloat = 0
     private static let hintCornerRadius: CGFloat = 14
-    private static let fadeEndOpacity: Double = 0.038
+    /// Trailing fade strength (dashboard hourly + daily strips, day-detail hourly strip).
+    private static let fadeEndOpacity: Double = 0.060
 
     private var highlightGradient: LinearGradient {
         LinearGradient(
