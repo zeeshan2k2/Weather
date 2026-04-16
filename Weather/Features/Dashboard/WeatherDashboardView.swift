@@ -1,5 +1,6 @@
 
 import SwiftUI
+import WidgetKit
 
 struct WeatherDashboardView: View {
 
@@ -7,10 +8,10 @@ struct WeatherDashboardView: View {
 
     @StateObject private var locationProvider = WeatherLocationProvider()
 
-    @AppStorage("weatherCityName") private var storedCityName = "Cupertino, CA"
-    @AppStorage("weatherLatitude") private var storedLatitudeString = "37.3230"
-    @AppStorage("weatherLongitude") private var storedLongitudeString = "-122.0322"
-    @AppStorage("weatherTimezone") private var storedTimezone = "America/Los_Angeles"
+    @AppStorage("weatherCityName", store: AppGroupWeatherDefaults.shared) private var storedCityName = "Cupertino, CA"
+    @AppStorage("weatherLatitude", store: AppGroupWeatherDefaults.shared) private var storedLatitudeString = "37.3230"
+    @AppStorage("weatherLongitude", store: AppGroupWeatherDefaults.shared) private var storedLongitudeString = "-122.0322"
+    @AppStorage("weatherTimezone", store: AppGroupWeatherDefaults.shared) private var storedTimezone = "America/Los_Angeles"
 
     @StateObject private var model: WeatherDashboardModel
 
@@ -222,6 +223,9 @@ struct WeatherDashboardView: View {
             Button("OK", role: .cancel) { locationErrorMessage = nil }
         } message: {
             Text(locationErrorMessage ?? "")
+        }
+        .onChange(of: "\(storedLatitudeString)|\(storedLongitudeString)|\(storedTimezone)|\(storedCityName)") { _ in
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
