@@ -12,6 +12,7 @@ struct WeatherDashboardView: View {
     @AppStorage("weatherLatitude", store: AppGroupWeatherDefaults.shared) private var storedLatitudeString = "37.3230"
     @AppStorage("weatherLongitude", store: AppGroupWeatherDefaults.shared) private var storedLongitudeString = "-122.0322"
     @AppStorage("weatherTimezone", store: AppGroupWeatherDefaults.shared) private var storedTimezone = "America/Los_Angeles"
+    @AppStorage(AppGroupWeatherDefaults.Key.useCelsius, store: AppGroupWeatherDefaults.shared) private var useCelsius = false
 
     @StateObject private var model: WeatherDashboardModel
 
@@ -20,10 +21,10 @@ struct WeatherDashboardView: View {
         _model = StateObject(wrappedValue: WeatherDashboardModel(forecastRepository: forecastRepository))
     }
     @State private var showCitySearch = false
-    @State private var useCelsius = false
     @State private var dayDetailSelection: WeatherDay?
     @State private var isFetchingLocation = false
     @State private var locationErrorMessage: String?
+    @State private var showForecastInsight = false
 
     private var selectedLatitude: Double {
         Double(storedLatitudeString) ?? 37.3230
@@ -83,7 +84,7 @@ struct WeatherDashboardView: View {
                                     )
 
                                     DashboardForecastStripsSection(
-                                        hourlySlice: model.hourlySlice24,
+                                        hourlySlice: model.hourlyForecastSliceFromNow(timeZoneIdentifier: storedTimezone),
                                         weatherDays: model.weatherData,
                                         timeZoneIdentifier: storedTimezone,
                                         currentIsDay: model.currentIsDay,
@@ -115,7 +116,7 @@ struct WeatherDashboardView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.bottom, 40)
+                        .padding(.bottom, 112)
                     }
                     .refreshable {
                         await model.loadForecast(
@@ -130,9 +131,14 @@ struct WeatherDashboardView: View {
             }
             .overlay(alignment: .bottomTrailing) {
                 if !model.showLoadFailurePlaceholder {
-                    DashboardUnitToggleButton(useCelsius: $useCelsius)
-                        .padding(.trailing, 14)
-                        .padding(.bottom, 10)
+                    VStack(alignment: .trailing, spacing: 10) {
+                        DashboardUnitToggleButton(useCelsius: $useCelsius)
+                        DashboardAIInsightButton {
+                            showForecastInsight = true
+                        }
+                    }
+                    .padding(.trailing, 14)
+                    .padding(.bottom, 10)
                 }
             }
             .toolbarBackground(.hidden, for: .navigationBar)
@@ -169,6 +175,17 @@ struct WeatherDashboardView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showForecastInsight) {
+                ForecastInsightSheet(
+                    payload: ForecastInsightCopyBuilder.build(
+                        model: model,
+                        cityName: storedCityName,
+                        useCelsius: useCelsius,
+                        unitSuffix: unitSuffix,
+                        timeZoneIdentifier: storedTimezone
+                    )
+                )
+            }
             .sheet(isPresented: $showCitySearch) {
                 CitySearchView(forecastRepository: forecastRepository) { place in
                     storedCityName = "\(place.name), \(place.country)"
@@ -180,7 +197,7 @@ struct WeatherDashboardView: View {
             .sheet(item: $dayDetailSelection) { selected in
                 DayDetailView(
                     summary: selected,
-                    hourly: model.hourlyItems(forDayId: selected.id),
+                    hourly: model.hourlyItems(forDayId: selected.id, timeZoneIdentifier: storedTimezone),
                     timeZoneIdentifier: storedTimezone,
                     useCelsius: useCelsius,
                     cityName: storedCityName,
@@ -225,6 +242,9 @@ struct WeatherDashboardView: View {
             Text(locationErrorMessage ?? "")
         }
         .onChange(of: "\(storedLatitudeString)|\(storedLongitudeString)|\(storedTimezone)|\(storedCityName)") { _ in
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+        .onChange(of: useCelsius) { _ in
             WidgetCenter.shared.reloadAllTimelines()
         }
     }

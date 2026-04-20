@@ -36,7 +36,18 @@
 		C2B8E0712F9400010094ED01 /* StripScrollHintChevron.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0702F9400010094ED01 /* StripScrollHintChevron.swift */; };
 		C2B8E0832F9600010094ED01 /* WeatherMetricSymbolImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0822F9600010094ED01 /* WeatherMetricSymbolImage.swift */; };
 		C2B8E0952FA0000300944ED01 /* WeatherLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0942FA0000300944ED01 /* WeatherLocationProvider.swift */; };
+		C2B8E0A02FB100010094ED01 /* DashboardAIInsightButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0A12FB100010094ED01 /* DashboardAIInsightButton.swift */; };
+		C2B8E0B32FB000010094ED01 /* WeatherWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0B12FB000010094ED01 /* WeatherWidgetBundle.swift */; };
+		C2B8E1142FB100080094ED01 /* WeatherWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1102FB100080094ED01 /* WeatherWidgetEntry.swift */; };
+		C2B8E1152FB100080094ED01 /* WeatherTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1112FB100080094ED01 /* WeatherTimelineProvider.swift */; };
+		C2B8E1162FB100080094ED01 /* WeatherWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1122FB100080094ED01 /* WeatherWidgetEntryView.swift */; };
+		C2B8E1172FB100080094ED01 /* WeatherForecastWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1132FB100080094ED01 /* WeatherForecastWidget.swift */; };
+		C2B8E0B42FB100020094ED01 /* AIInsightChromePalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0B52FB100020094ED01 /* AIInsightChromePalette.swift */; };
+		C2B8E0B52FB000010094ED01 /* WeatherWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C2B8E0B02FB000010094ED01 /* WeatherWidgetExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2B8E0B62FB100020094ED01 /* ForecastInsightSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0B72FB100020094ED01 /* ForecastInsightSheet.swift */; };
 		C2B8E0D32FB000010094ED01 /* AppGroupWeatherDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0D02FB000010094ED01 /* AppGroupWeatherDefaults.swift */; };
+		C2B8E1042FB100060094ED01 /* TemperatureUnitDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1032FB100060094ED01 /* TemperatureUnitDisplay.swift */; };
+		C2B8E1052FB100060094ED01 /* TemperatureUnitDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1032FB100060094ED01 /* TemperatureUnitDisplay.swift */; };
 		C2B8E0E92FB000010094ED01 /* AppGroupWeatherDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0D02FB000010094ED01 /* AppGroupWeatherDefaults.swift */; };
 		C2B8E0EA2FB000010094ED01 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E01C2F9000070094ED01 /* APIManager.swift */; };
 		C2B8E0EB2FB000010094ED01 /* ForecastModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0282F9000090094ED01 /* ForecastModels.swift */; };
@@ -47,9 +58,12 @@
 		C2B8E0F02FB000010094ED01 /* WeatherSkyStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1686A332F85ACE3007C5424 /* WeatherSkyStyle.swift */; };
 		C2B8E0F12FB000010094ED01 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11D1DD82F733CC700DB93FC /* Color+Hex.swift */; };
 		C2B8E0F22FB000010094ED01 /* WeatherDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0102F9000010094ED01 /* WeatherDateFormatting.swift */; };
-		C2B8E0B32FB000010094ED01 /* WeatherWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0B12FB000010094ED01 /* WeatherWidgetBundle.swift */; };
-		C2B8E0B42FB000010094ED01 /* WeatherWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0B22FB000010094ED01 /* WeatherWidget.swift */; };
-		C2B8E0B52FB000010094ED01 /* WeatherWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C2B8E0B02FB000010094ED01 /* WeatherWidgetExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2B8E0FD2FB100040094ED01 /* ForecastInsightPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0FA2FB100040094ED01 /* ForecastInsightPayload.swift */; };
+		C2B8E0FE2FB100040094ED01 /* ForecastInsightCopyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0FB2FB100040094ED01 /* ForecastInsightCopyBuilder.swift */; };
+		C2B8E0FF2FB100040094ED01 /* ForecastInsightAccentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E0FC2FB100040094ED01 /* ForecastInsightAccentCard.swift */; };
+		C2B8E1262FC300020094ED01 /* OllamaChatClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1272FC300020094ED01 /* OllamaChatClient.swift */; };
+		C2B8E1282FC300020094ED01 /* OllamaInsightConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E1292FC300020094ED01 /* OllamaInsightConfiguration.swift */; };
+		C2B8E12A2FC300020094ED01 /* ForecastInsightOllamaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B8E12B2FC300020094ED01 /* ForecastInsightOllamaService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,13 +121,26 @@
 		C2B8E0702F9400010094ED01 /* StripScrollHintChevron.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripScrollHintChevron.swift; sourceTree = "<group>"; };
 		C2B8E0822F9600010094ED01 /* WeatherMetricSymbolImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherMetricSymbolImage.swift; sourceTree = "<group>"; };
 		C2B8E0942FA0000300944ED01 /* WeatherLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherLocationProvider.swift; sourceTree = "<group>"; };
+		C2B8E0A12FB100010094ED01 /* DashboardAIInsightButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardAIInsightButton.swift; sourceTree = "<group>"; };
 		C2B8E0B02FB000010094ED01 /* WeatherWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WeatherWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2B8E0B12FB000010094ED01 /* WeatherWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidgetBundle.swift; sourceTree = "<group>"; };
-		C2B8E0B22FB000010094ED01 /* WeatherWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidget.swift; sourceTree = "<group>"; };
+		C2B8E1102FB100080094ED01 /* WeatherWidgetEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidgetEntry.swift; sourceTree = "<group>"; };
+		C2B8E1112FB100080094ED01 /* WeatherTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTimelineProvider.swift; sourceTree = "<group>"; };
+		C2B8E1122FB100080094ED01 /* WeatherWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherWidgetEntryView.swift; sourceTree = "<group>"; };
+		C2B8E1132FB100080094ED01 /* WeatherForecastWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastWidget.swift; sourceTree = "<group>"; };
+		C2B8E0B52FB100020094ED01 /* AIInsightChromePalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIInsightChromePalette.swift; sourceTree = "<group>"; };
+		C2B8E0B72FB100020094ED01 /* ForecastInsightSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastInsightSheet.swift; sourceTree = "<group>"; };
 		C2B8E0C12FB000010094ED01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C2B8E0D02FB000010094ED01 /* AppGroupWeatherDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupWeatherDefaults.swift; sourceTree = "<group>"; };
+		C2B8E1032FB100060094ED01 /* TemperatureUnitDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureUnitDisplay.swift; sourceTree = "<group>"; };
 		C2B8E0DE2FB000010094ED01 /* Weather.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Weather.entitlements; sourceTree = "<group>"; };
 		C2B8E0DF2FB000010094ED01 /* WeatherWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WeatherWidgetExtension.entitlements; sourceTree = "<group>"; };
+		C2B8E0FA2FB100040094ED01 /* ForecastInsightPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastInsightPayload.swift; sourceTree = "<group>"; };
+		C2B8E0FB2FB100040094ED01 /* ForecastInsightCopyBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastInsightCopyBuilder.swift; sourceTree = "<group>"; };
+		C2B8E0FC2FB100040094ED01 /* ForecastInsightAccentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastInsightAccentCard.swift; sourceTree = "<group>"; };
+		C2B8E1272FC300020094ED01 /* OllamaChatClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OllamaChatClient.swift; sourceTree = "<group>"; };
+		C2B8E1292FC300020094ED01 /* OllamaInsightConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OllamaInsightConfiguration.swift; sourceTree = "<group>"; };
+		C2B8E12B2FC300020094ED01 /* ForecastInsightOllamaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastInsightOllamaService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +190,7 @@
 				C1C010022F885467004C63A5 /* Dashboard */,
 				C1C010032F885468004C63A5 /* DayDetail */,
 				C1C010042F885468004C63A5 /* CitySearch */,
+				C2B8E1002FB100040094ED01 /* ForecastInsight */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -172,6 +200,8 @@
 			children = (
 				C11D1DCD2F733CC700DB93FC /* WeatherDashboardView.swift */,
 				C2B8E0422F9100000094ED01 /* DashboardScreenViews.swift */,
+				C2B8E0A12FB100010094ED01 /* DashboardAIInsightButton.swift */,
+				C2B8E0B52FB100020094ED01 /* AIInsightChromePalette.swift */,
 				C2B8E0402F9100000094ED01 /* WeatherDashboardModel.swift */,
 				C1C010102F885EC0004C63A5 /* Components */,
 			);
@@ -221,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				C2B8E01C2F9000070094ED01 /* APIManager.swift */,
+				C2B8E1272FC300020094ED01 /* OllamaChatClient.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -255,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				C2B8E0D02FB000010094ED01 /* AppGroupWeatherDefaults.swift */,
+				C2B8E1032FB100060094ED01 /* TemperatureUnitDisplay.swift */,
 				C2B8E0702F9400010094ED01 /* StripScrollHintChevron.swift */,
 				C2B8E0102F9000010094ED01 /* WeatherDateFormatting.swift */,
 				C2B8E0942FA0000300944ED01 /* WeatherLocationProvider.swift */,
@@ -314,11 +346,27 @@
 			isa = PBXGroup;
 			children = (
 				C2B8E0DF2FB000010094ED01 /* WeatherWidgetExtension.entitlements */,
-				C2B8E0B22FB000010094ED01 /* WeatherWidget.swift */,
+				C2B8E1102FB100080094ED01 /* WeatherWidgetEntry.swift */,
+				C2B8E1112FB100080094ED01 /* WeatherTimelineProvider.swift */,
+				C2B8E1122FB100080094ED01 /* WeatherWidgetEntryView.swift */,
+				C2B8E1132FB100080094ED01 /* WeatherForecastWidget.swift */,
 				C2B8E0B12FB000010094ED01 /* WeatherWidgetBundle.swift */,
 				C2B8E0C12FB000010094ED01 /* Info.plist */,
 			);
 			path = WeatherWidget;
+			sourceTree = "<group>";
+		};
+		C2B8E1002FB100040094ED01 /* ForecastInsight */ = {
+			isa = PBXGroup;
+			children = (
+				C2B8E0FA2FB100040094ED01 /* ForecastInsightPayload.swift */,
+				C2B8E0FB2FB100040094ED01 /* ForecastInsightCopyBuilder.swift */,
+				C2B8E0FC2FB100040094ED01 /* ForecastInsightAccentCard.swift */,
+				C2B8E1292FC300020094ED01 /* OllamaInsightConfiguration.swift */,
+				C2B8E12B2FC300020094ED01 /* ForecastInsightOllamaService.swift */,
+				C2B8E0B72FB100020094ED01 /* ForecastInsightSheet.swift */,
+			);
+			path = ForecastInsight;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -428,6 +476,12 @@
 				C1070C532F87104300944ED7 /* WeatherStatTile.swift in Sources */,
 				C2B8E0832F9600010094ED01 /* WeatherMetricSymbolImage.swift in Sources */,
 				C2B8E0432F9100000094ED01 /* DashboardScreenViews.swift in Sources */,
+				C2B8E0A02FB100010094ED01 /* DashboardAIInsightButton.swift in Sources */,
+				C2B8E0B42FB100020094ED01 /* AIInsightChromePalette.swift in Sources */,
+				C2B8E0FD2FB100040094ED01 /* ForecastInsightPayload.swift in Sources */,
+				C2B8E0FE2FB100040094ED01 /* ForecastInsightCopyBuilder.swift in Sources */,
+				C2B8E0FF2FB100040094ED01 /* ForecastInsightAccentCard.swift in Sources */,
+				C2B8E0B62FB100020094ED01 /* ForecastInsightSheet.swift in Sources */,
 				C11D1DD22F733CC700DB93FC /* WeatherDashboardView.swift in Sources */,
 				C2B8E0412F9100000094ED01 /* WeatherDashboardModel.swift in Sources */,
 				C1070C592F8710DA00944ED7 /* BackgroundView.swift in Sources */,
@@ -440,6 +494,9 @@
 				C2B8E02F2F9000090094ED01 /* ForecastRepository.swift in Sources */,
 				C2B8E02B2F9000090094ED01 /* ForecastValueTypes.swift in Sources */,
 				C2B8E02D2F9000090094ED01 /* ForecastRemoteDTOs.swift in Sources */,
+				C2B8E1262FC300020094ED01 /* OllamaChatClient.swift in Sources */,
+				C2B8E1282FC300020094ED01 /* OllamaInsightConfiguration.swift in Sources */,
+				C2B8E12A2FC300020094ED01 /* ForecastInsightOllamaService.swift in Sources */,
 				C11D1DD72F733CC700DB93FC /* Color+Hex.swift in Sources */,
 				C2B8E0512F9200000094ED01 /* CitySearchModel.swift in Sources */,
 				C1686A2D2F85ACE3007C5424 /* CitySearchView.swift in Sources */,
@@ -454,6 +511,7 @@
 				C2B8E0952FA0000300944ED01 /* WeatherLocationProvider.swift in Sources */,
 				C2B8E0192F9000050094ED01 /* WeatherForecastStripsPanel.swift in Sources */,
 				C2B8E0D32FB000010094ED01 /* AppGroupWeatherDefaults.swift in Sources */,
+				C2B8E1042FB100060094ED01 /* TemperatureUnitDisplay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +520,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2B8E0E92FB000010094ED01 /* AppGroupWeatherDefaults.swift in Sources */,
+				C2B8E1052FB100060094ED01 /* TemperatureUnitDisplay.swift in Sources */,
 				C2B8E0EA2FB000010094ED01 /* APIManager.swift in Sources */,
 				C2B8E0EB2FB000010094ED01 /* ForecastModels.swift in Sources */,
 				C2B8E0EC2FB000010094ED01 /* ForecastValueTypes.swift in Sources */,
@@ -472,7 +531,10 @@
 				C2B8E0F12FB000010094ED01 /* Color+Hex.swift in Sources */,
 				C2B8E0F22FB000010094ED01 /* WeatherDateFormatting.swift in Sources */,
 				C2B8E0B32FB000010094ED01 /* WeatherWidgetBundle.swift in Sources */,
-				C2B8E0B42FB000010094ED01 /* WeatherWidget.swift in Sources */,
+				C2B8E1142FB100080094ED01 /* WeatherWidgetEntry.swift in Sources */,
+				C2B8E1152FB100080094ED01 /* WeatherTimelineProvider.swift in Sources */,
+				C2B8E1162FB100080094ED01 /* WeatherWidgetEntryView.swift in Sources */,
+				C2B8E1172FB100080094ED01 /* WeatherForecastWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,6 +682,8 @@
 				DEVELOPMENT_TEAM = 232C7N3DDY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Weather connects to Ollama on your local network when generating forecast insight.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Weather uses your location to show the forecast for where you are.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -656,6 +720,8 @@
 				DEVELOPMENT_TEAM = 232C7N3DDY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSAppTransportSecurity_NSAllowsLocalNetworking = YES;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Weather connects to Ollama on your local network when generating forecast insight.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Weather uses your location to show the forecast for where you are.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

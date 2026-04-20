@@ -31,11 +31,33 @@ enum WeatherDateFormatting {
         return longDateOutput.string(from: date)
     }
 
-    static func formattedHourLabel(timeISO: String, timeZoneIdentifier: String) -> String {
+    /// `yyyy-MM-dd` for `date` in the given IANA timezone (matches daily / hourly `dayId` prefixes).
+    static func calendarDayId(for date: Date, timeZoneIdentifier: String) -> String {
+        let tz = timeZone(for: timeZoneIdentifier)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = tz
+        let y = calendar.component(.year, from: date)
+        let m = calendar.component(.month, from: date)
+        let d = calendar.component(.day, from: date)
+        return String(format: "%04d-%02d-%02d", y, m, d)
+    }
+
+    static func date(fromHourlyISO timeISO: String, timeZoneIdentifier: String) -> Date? {
+        let tz = timeZone(for: timeZoneIdentifier)
+        hourlyISOInput.timeZone = tz
+        return hourlyISOInput.date(from: timeISO)
+    }
+
+    static func formattedHourLabel(timeISO: String, timeZoneIdentifier: String, referenceNow: Date = Date()) -> String {
         let tz = timeZone(for: timeZoneIdentifier)
         hourlyISOInput.timeZone = tz
         hour12h.timeZone = tz
         guard let date = hourlyISOInput.date(from: timeISO) else { return "--" }
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = tz
+        if calendar.isDate(date, equalTo: referenceNow, toGranularity: .hour) {
+            return "Now"
+        }
         return hour12h.string(from: date)
     }
 

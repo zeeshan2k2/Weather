@@ -14,6 +14,7 @@ enum AppGroupWeatherDefaults {
         static let latitude = "weatherLatitude"
         static let longitude = "weatherLongitude"
         static let timezone = "weatherTimezone"
+        static let useCelsius = "weatherUseCelsius"
     }
 
     /// One-time copy from `UserDefaults.standard` so existing installs keep their city after enabling the App Group.
