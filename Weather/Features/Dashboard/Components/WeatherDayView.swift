@@ -1,15 +1,14 @@
-
 import SwiftUI
 
 struct WeatherDayView: View {
 
     var dayOfWeek: String
     var imageName: String
-    /// Already converted for display (°C or °F).
+
     var highTemperature: Int
     var lowTemperature: Int?
     var unit: String = "F"
-    /// Tighter type and chrome for fixed-width dashboard strip slots (three-across layout).
+
     var stripCompact: Bool = false
 
     private var chromeCornerRadius: CGFloat {
@@ -40,12 +39,8 @@ struct WeatherDayView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.85)
 
-            Image(systemName: imageName)
-                .symbolRenderingMode(.multicolor)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            WeatherSkyConditionSymbol.resizableImage(systemName: imageName)
                 .frame(width: stripCompact ? 32 : 38, height: stripCompact ? 32 : 38)
-                .foregroundStyle(.white)
 
             Group {
                 if let lowTemperature {

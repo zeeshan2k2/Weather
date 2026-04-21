@@ -74,8 +74,8 @@ private struct WeatherWidgetSmallLayout: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(alignment: .firstTextBaseline, spacing: 6) {
-                            Text("\(entry.tempDisplay(entry.temperatureF))°\(entry.unitSuffix)")
-                                .font(.system(size: 38, weight: .medium, design: .rounded))
+                            Text("\(entry.tempDisplay(entry.temperatureF))°")
+                                .font(.system(size: 35, weight: .medium, design: .rounded))
                                 .foregroundStyle(.white)
                                 .minimumScaleFactor(0.85)
                                 .shadow(color: .black.opacity(0.2), radius: 3, y: 2)
@@ -131,8 +131,8 @@ private struct WeatherWidgetMediumLayout: View {
                 VStack(alignment: .trailing, spacing: 4) {
                     WeatherWidgetMulticolorSymbol(systemName: entry.symbolName, font: .system(size: 44, weight: .regular))
                         .shadow(color: .black.opacity(0.18), radius: 2, y: 1)
-                    Text("\(entry.tempDisplay(entry.temperatureF))°\(entry.unitSuffix)")
-                        .font(.system(size: 54, weight: .medium, design: .rounded))
+                    Text("\(entry.tempDisplay(entry.temperatureF))°")
+                        .font(.system(size: 50, weight: .medium, design: .rounded))
                         .foregroundStyle(.white)
                         .minimumScaleFactor(0.8)
                         .shadow(color: .black.opacity(0.2), radius: 3, y: 2)
@@ -155,7 +155,7 @@ private struct WeatherWidgetMediumBottomMeta: View {
         if entry.highLowPair != nil || (entry.latitude != nil && entry.longitude != nil) {
             VStack(alignment: .trailing, spacing: 2) {
                 if let highLow = entry.highLowPair {
-                    Text("H \(entry.tempDisplay(highLow.high))°\(entry.unitSuffix)  L \(entry.tempDisplay(highLow.low))°\(entry.unitSuffix)")
+                    Text("H \(entry.tempDisplay(highLow.high))°  L \(entry.tempDisplay(highLow.low))°")
                         .font(.system(size: 10, weight: .semibold, design: .rounded))
                         .foregroundStyle(.white.opacity(0.88))
                         .monospacedDigit()
@@ -195,23 +195,26 @@ private struct WeatherWidgetMediumHourlyStrip: View {
         let slots = Array(entry.hourlySlots.prefix(5))
         return HStack(alignment: .center, spacing: 3) {
             ForEach(slots, id: \.stripIdentifier) { slot in
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .center, spacing: 3) {
                     Text(slot.hourLabel)
                         .font(.system(size: 10, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.85))
                         .lineLimit(1)
-                        .frame(minWidth: 36, alignment: .leading)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
                     WeatherWidgetMulticolorSymbol(systemName: slot.symbolName, font: .system(size: 18, weight: .regular))
-                    Text("\(entry.tempDisplay(slot.tempF))°\(entry.unitSuffix)")
+                        .frame(maxWidth: .infinity)
+                    Text("\(entry.tempDisplay(slot.tempF))°")
                         .font(.system(size: 12, weight: .semibold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(.white.opacity(0.95))
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
                 }
-                .frame(minWidth: 36, alignment: .leading)
+                .frame(maxWidth: .infinity)
             }
-            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .center)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Next five hours")
     }
@@ -230,7 +233,7 @@ private struct WeatherWidgetDailyHighLowColumn: View {
             Text("H")
                 .font(.system(size: labelSize, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white.opacity(0.78))
-            Text("\(entry.tempDisplay(high))°\(entry.unitSuffix)")
+            Text("\(entry.tempDisplay(high))°")
                 .font(.system(size: valueSize, weight: .semibold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(.white)
@@ -239,7 +242,7 @@ private struct WeatherWidgetDailyHighLowColumn: View {
                 .font(.system(size: labelSize, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white.opacity(0.78))
                 .padding(.top, 2)
-            Text("\(entry.tempDisplay(low))°\(entry.unitSuffix)")
+            Text("\(entry.tempDisplay(low))°")
                 .font(.system(size: valueSize, weight: .semibold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(.white.opacity(0.92))
@@ -275,16 +278,35 @@ private struct WeatherWidgetMulticolorSymbol: View {
     let systemName: String
     let font: Font
 
+    private var isCloudMoon: Bool {
+        WeatherPresentation.usesCloudMoonHierarchicalSymbol(systemName: systemName)
+    }
+
     var body: some View {
-        if #available(iOSApplicationExtension 18.0, *) {
-            Image(systemName: systemName)
-                .widgetAccentedRenderingMode(.fullColor)
-                .font(font)
-                .symbolRenderingMode(.multicolor)
-        } else {
-            Image(systemName: systemName)
-                .font(font)
-                .symbolRenderingMode(.multicolor)
+        Group {
+            if isCloudMoon {
+                if #available(iOSApplicationExtension 18.0, *) {
+                    Image(systemName: systemName)
+                        .widgetAccentedRenderingMode(.fullColor)
+                        .font(font)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.white.opacity(0.95), .white.opacity(0.48))
+                } else {
+                    Image(systemName: systemName)
+                        .font(font)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.white.opacity(0.95), .white.opacity(0.48))
+                }
+            } else if #available(iOSApplicationExtension 18.0, *) {
+                Image(systemName: systemName)
+                    .widgetAccentedRenderingMode(.fullColor)
+                    .font(font)
+                    .symbolRenderingMode(.multicolor)
+            } else {
+                Image(systemName: systemName)
+                    .font(font)
+                    .symbolRenderingMode(.multicolor)
+            }
         }
     }
 }

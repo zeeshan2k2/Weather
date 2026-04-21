@@ -1,4 +1,3 @@
-
 import Foundation
 
 struct WeatherDay: Identifiable, Hashable, Sendable {
@@ -6,7 +5,7 @@ struct WeatherDay: Identifiable, Hashable, Sendable {
     var dayOfWeek: String
     var imageName: String
     var weatherCode: Int
-    /// Daily high (°F); UI still uses this as the main number on the strip.
+
     var temperature: Int
     var lowTempF: Int?
     var precipitationProbabilityMax: Int?

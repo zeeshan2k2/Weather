@@ -1,23 +1,44 @@
-
 import SwiftUI
-
-// MARK: - Background
 
 struct CitySearchScreenGradient: View {
     var body: some View {
-        LinearGradient(
-            colors: [
-                Color(hex: "1E3A5F"),
-                Color(hex: "0F1B2E"),
-                Color(hex: "0A1628")
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        ZStack {
+            LinearGradient(
+                stops: [
+                    .init(color: Color(hex: "243B55"), location: 0),
+                    .init(color: Color(hex: "152232"), location: 0.42),
+                    .init(color: Color(hex: "0A1018"), location: 1)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            LinearGradient(
+                colors: [
+                    Color(hex: "5B8FC7").opacity(0.14),
+                    Color.clear,
+                    Color(hex: "1E3D5C").opacity(0.22)
+                ],
+                startPoint: UnitPoint(x: 0.1, y: 0),
+                endPoint: .bottomTrailing
+            )
+
+            RadialGradient(
+                colors: [Color.white.opacity(0.08), Color.clear],
+                center: UnitPoint(x: 0.2, y: 0),
+                startRadius: 0,
+                endRadius: 320
+            )
+
+            RadialGradient(
+                colors: [Color.black.opacity(0.35), Color.clear],
+                center: .bottom,
+                startRadius: 80,
+                endRadius: 520
+            )
+        }
     }
 }
-
-// MARK: - Empty state
 
 struct CitySearchEmptyState: View {
     var icon: String
@@ -45,8 +66,6 @@ struct CitySearchEmptyState: View {
         .padding(.vertical, 8)
     }
 }
-
-// MARK: - Result card
 
 struct CitySearchResultCard: View {
     let place: WeatherPlace
@@ -88,8 +107,6 @@ struct CitySearchResultCard: View {
     }
 }
 
-// MARK: - Match highlight
-
 struct CitySearchHighlightedName: View {
     let name: String
     let query: String
@@ -121,8 +138,6 @@ struct CitySearchHighlightedName: View {
             + Text(suffix).foregroundColor(dim))
     }
 }
-
-// MARK: - Row press
 
 struct CitySearchRowPressStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

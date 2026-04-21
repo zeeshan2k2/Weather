@@ -1,4 +1,3 @@
-
 import Foundation
 
 struct WeatherForecast: Sendable {
@@ -32,7 +31,6 @@ struct HourlyForecastItem: Sendable, Identifiable {
     let precipitationProbabilityPercent: Int?
 }
 
-/// A searchable location used for forecast requests (backed by remote place-search JSON).
 struct WeatherPlace: Identifiable, Hashable, Sendable {
     let id: Int
     let name: String

@@ -1,4 +1,3 @@
-
 import Combine
 import CoreLocation
 import Foundation
@@ -38,7 +37,10 @@ final class WeatherLocationProvider: NSObject, ObservableObject, CLLocationManag
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
     }
 
-    /// Requests “when in use” permission if needed, fetches one fix, reverse-geocodes, returns coordinates + label + time zone.
+    var authorizationStatus: CLAuthorizationStatus {
+        manager.authorizationStatus
+    }
+
     func resolveCurrentPlace() async throws -> WeatherResolvedPlace {
         try await ensureWhenInUseAuthorized()
         let location = try await requestOneShotLocation()

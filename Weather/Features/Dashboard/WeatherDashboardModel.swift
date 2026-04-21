@@ -1,4 +1,3 @@
-
 import Combine
 import Foundation
 
@@ -7,7 +6,6 @@ enum DashboardTemperature {
         TemperatureUnitDisplay.displayValue(fahrenheit: fahrenheit, useCelsius: useCelsius)
     }
 
-    /// Current remote `precipitation` is often the last hour (near 0 when dry). When negligible, show today’s max chance from daily.
     static func precipitationTileValue(mm: Double?, todayChancePercent: Int?) -> String {
         if let mm, mm >= 0.02 {
             if mm < 1 { return String(format: "%.1f mm", mm) }
@@ -49,7 +47,6 @@ final class WeatherDashboardModel: ObservableObject {
         WeatherPresentation.symbolName(for: currentWeatherCode, isDay: currentIsDay)
     }
 
-    /// Next `limit` hourly slots from the start of the current clock hour in `timeZoneIdentifier` (dashboard strip).
     func hourlyForecastSliceFromNow(timeZoneIdentifier: String, limit: Int = 24, now: Date = Date()) -> [HourlyForecastItem] {
         let trimmed = Self.hourlyItemsFromStartOfCurrentHour(
             hourlyForecast,
@@ -66,6 +63,21 @@ final class WeatherDashboardModel: ObservableObject {
 
     var showLoadFailurePlaceholder: Bool {
         errorMessage != nil && weatherData.isEmpty && !isLoading
+    }
+
+    func resetDisplayState() {
+        weatherData = []
+        hourlyForecast = []
+        currentTemp = 0
+        currentWeatherCode = 0
+        currentIsDay = true
+        apparentTempF = nil
+        humidityPercent = nil
+        precipitationMm = nil
+        windSpeedMph = nil
+        lastUpdatedAt = nil
+        errorMessage = nil
+        loadFailedOffline = false
     }
 
     func hourlyItems(forDayId dayId: String, timeZoneIdentifier: String, now: Date = Date()) -> [HourlyForecastItem] {
@@ -130,6 +142,17 @@ final class WeatherDashboardModel: ObservableObject {
             lastUpdatedAt = Date()
             loadFailedOffline = false
             errorMessage = nil
+
+            await ForecastPlacesSnapshotCache.shared.storeFromForecast(
+                forecast,
+                latitude: latitude,
+                longitude: longitude,
+                timeZoneIdentifier: timeZoneIdentifier
+            )
+            Task(priority: .utility) {
+                try? await Task.sleep(nanoseconds: 650_000_000)
+                await ForecastPlacesSnapshotCache.prefetchSavedPlaces(repository: forecastRepository)
+            }
         } catch {
             if error is CancellationError { return }
             if (error as? URLError)?.code == .cancelled { return }

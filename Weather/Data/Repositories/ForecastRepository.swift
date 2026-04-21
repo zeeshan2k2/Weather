@@ -1,15 +1,13 @@
-
 import Foundation
 
-/// Loads forecast + place search data for the UI layer.
 protocol ForecastRepository: Sendable {
     func fetchForecast(coordinate: MapCoordinate, timeZone: IANATimeZone) async throws -> WeatherForecast
     func searchPlaces(query: PlaceSearchQuery) async throws -> [WeatherPlace]
 }
 
-// MARK: - Remote implementation
-
 struct RemoteForecastRepository: ForecastRepository {
+
+    nonisolated init() {}
 
     func fetchForecast(coordinate: MapCoordinate, timeZone: IANATimeZone) async throws -> WeatherForecast {
         let url = ForecastRemoteEndpoints.forecastURL(
@@ -30,8 +28,6 @@ struct RemoteForecastRepository: ForecastRepository {
         return (dto.results ?? []).map(WeatherPlace.init(dto:))
     }
 }
-
-// MARK: - Remote API URLs
 
 private enum ForecastRemoteEndpoints {
 

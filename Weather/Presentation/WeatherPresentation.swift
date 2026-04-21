@@ -1,14 +1,11 @@
-
 import Foundation
 
 enum WeatherPresentation {
 
-    /// Typical connectivity / reachability failures (for offline-style UI).
     static func isLikelyConnectivityFailure(_ error: Error) -> Bool {
         APIManager.isLikelyConnectivityFailure(error)
     }
 
-    /// Maps WMO weather codes (Open-Meteo) to SF Symbols.
     static func symbolName(for code: Int, isDay: Bool) -> String {
         switch code {
         case 0:
@@ -40,7 +37,6 @@ enum WeatherPresentation {
         }
     }
 
-    /// Short condition label for UI (WMO codes used by Open-Meteo).
     static func conditionDescription(for code: Int, isDay: Bool) -> String {
         switch code {
         case 0:
@@ -78,5 +74,9 @@ enum WeatherPresentation {
         default:
             return "Weather"
         }
+    }
+
+    static func usesCloudMoonHierarchicalSymbol(systemName: String) -> Bool {
+        systemName.contains("cloud") && systemName.contains("moon")
     }
 }

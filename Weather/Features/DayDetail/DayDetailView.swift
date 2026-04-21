@@ -1,8 +1,7 @@
-
 import SwiftUI
 
 private enum DayDetailViewLayout {
-    /// Matches `ScrollView` content horizontal padding so strip hints align to the outer column edge.
+
     static let horizontalContentPadding: CGFloat = 24
 }
 

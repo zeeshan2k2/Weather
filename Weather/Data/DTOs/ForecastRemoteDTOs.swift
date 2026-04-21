@@ -1,7 +1,4 @@
-
 import Foundation
-
-// MARK: - Place search
 
 struct PlaceSearchResponseDTO: Decodable {
     let results: [RemotePlaceDTO]?
@@ -28,8 +25,6 @@ extension WeatherPlace {
         timezone = dto.timezone
     }
 }
-
-// MARK: - Forecast bundle
 
 struct ForecastResponseDTO: Decodable {
     let current: CurrentConditionsDTO

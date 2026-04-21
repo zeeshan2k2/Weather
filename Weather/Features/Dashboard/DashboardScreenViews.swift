@@ -1,7 +1,57 @@
-
 import SwiftUI
 
-// MARK: - Load failure
+struct DashboardLocationAccessView: View {
+    var onOpenSettings: () -> Void
+    var onSearchPlaces: () -> Void
+
+    var body: some View {
+        VStack(spacing: 22) {
+            Image(systemName: "location.circle.fill")
+                .font(.system(size: 64, weight: .medium))
+                .foregroundStyle(.white.opacity(0.92))
+                .symbolRenderingMode(.hierarchical)
+
+            Text("Location needed")
+                .font(.system(size: 22, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+
+            Text(
+                "Allow location access to see weather where you are, or search for a city in Places."
+            )
+            .font(.system(size: 16, weight: .medium, design: .rounded))
+            .foregroundStyle(.white.opacity(0.82))
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 12)
+
+            VStack(spacing: 12) {
+                Button {
+                    onOpenSettings()
+                } label: {
+                    Text("Open Settings")
+                        .font(.system(.body, design: .rounded, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color.white.opacity(0.22)))
+                }
+                .buttonStyle(.plain)
+
+                Button {
+                    onSearchPlaces()
+                } label: {
+                    Text("Search places")
+                        .font(.system(.body, design: .rounded, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.95))
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 8)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 28)
+        .padding(.horizontal, 20)
+    }
+}
 
 struct DashboardLoadFailureView: View {
     let loadFailedOffline: Bool
@@ -44,11 +94,9 @@ struct DashboardLoadFailureView: View {
     }
 }
 
-// MARK: - Top retry (error banner slot)
-
 enum DashboardChromeMetrics {
     static let chromeButtonShadow = (color: Color.black.opacity(0.42), radius: CGFloat(5), y: CGFloat(2))
-    /// Same frosted language as `WeatherForecastStripsPanel` (flat glass, not “3D” chrome).
+
     static let glassSurfaceGradient = LinearGradient(
         colors: [
             Color.white.opacity(0.26),
@@ -58,9 +106,9 @@ enum DashboardChromeMetrics {
         endPoint: .bottomTrailing
     )
     static let glassSurfaceStroke = Color.white.opacity(0.42)
-    /// One soft shadow for toolbar glyphs and unit label (minimal vs. layered crisp+soft).
+
     static let minimalChromeShadow = (color: Color.black.opacity(0.26), radius: CGFloat(2), y: CGFloat(1))
-    /// Lighter than `chromeButtonShadow` so floating pills don’t look embossed.
+
     static let floatingGlassShadow = (color: Color.black.opacity(0.2), radius: CGFloat(4), y: CGFloat(1.5))
     static let chromeFill = Color.white.opacity(0.42)
     static let chromeStroke = Color.white.opacity(0.55)
@@ -135,8 +183,6 @@ struct DashboardTopRetryControl: View {
     }
 }
 
-// MARK: - Unit toggle
-
 struct DashboardUnitToggleButton: View {
     @Binding var useCelsius: Bool
 
@@ -167,7 +213,7 @@ struct DashboardUnitToggleButton: View {
                         .strokeBorder(Color.white.opacity(0.45), lineWidth: 0.75)
                 )
                 .mask(alignment: .center) {
-                    // Knockout: solid capsule minus the text shape.
+
                     Rectangle()
                         .overlay(alignment: .center) {
                             Text(label)
@@ -190,7 +236,7 @@ struct DashboardUnitToggleButton: View {
 }
 
 extension View {
-    /// Flat white SF Symbol + one soft shadow (matches frosted dashboard glass).
+
     func dashboardToolbarGlyphChrome() -> some View {
         foregroundStyle(Color.white.opacity(0.95))
             .shadow(
@@ -200,8 +246,6 @@ extension View {
             )
     }
 }
-
-// MARK: - Stats grid
 
 struct DashboardWeatherStatsGrid: View {
     let apparentTempF: Int?
@@ -254,8 +298,6 @@ struct DashboardWeatherStatsGrid: View {
         .padding(.horizontal, 20)
     }
 }
-
-// MARK: - Forecast strips (hourly + daily)
 
 private enum DashboardStripLayout {
     static let hourlyVisibleColumnCount: CGFloat = 5
@@ -365,7 +407,7 @@ struct DashboardForecastStripsSection: View {
 
     @ViewBuilder
     private func hourlyColumn(hour: HourlyForecastItem, cellWidth: CGFloat) -> some View {
-        VStack(spacing: 6) {
+        VStack(alignment: .center, spacing: 6) {
             Text(WeatherDateFormatting.formattedHourLabel(timeISO: hour.timeISO, timeZoneIdentifier: timeZoneIdentifier))
                 .font(.system(size: 13, weight: .medium, design: .rounded))
                 .foregroundStyle(.white.opacity(0.85))
@@ -374,26 +416,252 @@ struct DashboardForecastStripsSection: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity)
-            Image(systemName: WeatherPresentation.symbolName(
-                for: hour.weatherCode,
-                isDay: WeatherDateFormatting.hourlyIsDaylight(
-                    timeISO: hour.timeISO,
-                    timeZoneIdentifier: timeZoneIdentifier,
-                    fallbackIsDay: currentIsDay
+            WeatherSkyConditionSymbol.resizableImage(
+                systemName: WeatherPresentation.symbolName(
+                    for: hour.weatherCode,
+                    isDay: WeatherDateFormatting.hourlyIsDaylight(
+                        timeISO: hour.timeISO,
+                        timeZoneIdentifier: timeZoneIdentifier,
+                        fallbackIsDay: currentIsDay
+                    )
                 )
-            ))
-            .symbolRenderingMode(.multicolor)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+            )
             .frame(width: 28, height: 28)
-            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
             Text("\(displayTemp(hour.tempF))°\(unitSuffix)")
                 .font(.system(size: 16, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
+                .multilineTextAlignment(.center)
                 .lineLimit(1)
                 .minimumScaleFactor(0.85)
+                .frame(maxWidth: .infinity)
         }
         .frame(width: cellWidth)
+    }
+}
+
+struct SearchPreviewDashboardView: View {
+    let place: WeatherPlace
+    private let forecastRepository: any ForecastRepository
+    var onDismiss: () -> Void
+    var onAdd: () -> Void
+
+    @AppStorage(AppGroupWeatherDefaults.Key.useCelsius, store: AppGroupWeatherDefaults.shared) private var useCelsius = false
+
+    @StateObject private var model: WeatherDashboardModel
+    @State private var dayDetailSelection: WeatherDay?
+    @State private var showForecastInsight = false
+
+    init(
+        place: WeatherPlace,
+        forecastRepository: any ForecastRepository,
+        onDismiss: @escaping () -> Void,
+        onAdd: @escaping () -> Void
+    ) {
+        self.place = place
+        self.forecastRepository = forecastRepository
+        self.onDismiss = onDismiss
+        self.onAdd = onAdd
+        _model = StateObject(wrappedValue: WeatherDashboardModel(forecastRepository: forecastRepository))
+    }
+
+    private var unitSuffix: String { useCelsius ? "C" : "F" }
+
+    var body: some View {
+        previewLayers
+            .overlay(alignment: .bottomTrailing) { previewBottomTrailing }
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        onDismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.title3.weight(.semibold))
+                            .dashboardToolbarGlyphChrome()
+                    }
+                    .accessibilityLabel("Dismiss")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        onAdd()
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title3.weight(.semibold))
+                            .dashboardToolbarGlyphChrome()
+                    }
+                    .accessibilityLabel("Add to Places")
+                }
+            }
+            .sheet(isPresented: $showForecastInsight) { insightSheet }
+            .sheet(item: $dayDetailSelection) { selected in
+                dayDetailSheet(selected)
+            }
+            .task(id: "\(place.latitude)|\(place.longitude)|\(place.timezone)") {
+                await model.loadForecast(
+                    isManualRetry: false,
+                    latitude: place.latitude,
+                    longitude: place.longitude,
+                    timeZoneIdentifier: place.timezone
+                )
+            }
+            .overlay(alignment: .top) { previewRetryOverlay }
+    }
+
+    private var previewLayers: some View {
+        ZStack {
+            BackgroundView(
+                weatherCode: model.currentWeatherCode,
+                isDay: model.currentIsDay,
+                temperatureF: model.currentTemp
+            )
+            .animation(.easeInOut(duration: 0.85), value: model.currentWeatherCode)
+            .animation(.easeInOut(duration: 0.85), value: model.currentIsDay)
+            .animation(.easeInOut(duration: 0.85), value: model.currentTemp)
+            .edgesIgnoringSafeArea(.all)
+
+            if model.showLoadFailurePlaceholder {
+                DashboardLoadFailureView(
+                    loadFailedOffline: model.loadFailedOffline,
+                    errorMessage: model.errorMessage
+                )
+            } else {
+                previewScrollContent
+            }
+        }
+    }
+
+    private var previewScrollContent: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                CityTextView(cityName: place.displayLine)
+                previewMiddleGroup
+                if let label = model.lastUpdatedLabel {
+                    previewUpdatedLabel(label)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 112)
+        }
+        .refreshable {
+            await model.loadForecast(
+                isManualRetry: false,
+                latitude: place.latitude,
+                longitude: place.longitude,
+                timeZoneIdentifier: place.timezone
+            )
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    @ViewBuilder
+    private var previewMiddleGroup: some View {
+        if model.weatherData.isEmpty && model.isLoading && model.errorMessage == nil {
+            VStack(spacing: 18) {
+                ProgressView()
+                    .tint(.white)
+                Text("Updating weather…")
+                    .font(.system(.subheadline, design: .rounded, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.92))
+            }
+            .frame(minHeight: 220)
+            .frame(maxWidth: .infinity)
+        } else if !model.weatherData.isEmpty {
+            MainWeatherView(
+                imageName: model.mainHeroSymbol,
+                temperature: DashboardTemperature.display(fahrenheit: model.currentTemp, useCelsius: useCelsius),
+                unit: unitSuffix,
+                conditionText: WeatherPresentation.conditionDescription(
+                    for: model.currentWeatherCode,
+                    isDay: model.currentIsDay
+                )
+            )
+            DashboardForecastStripsSection(
+                hourlySlice: model.hourlyForecastSliceFromNow(timeZoneIdentifier: place.timezone),
+                weatherDays: model.weatherData,
+                timeZoneIdentifier: place.timezone,
+                currentIsDay: model.currentIsDay,
+                useCelsius: useCelsius,
+                onSelectDay: { dayDetailSelection = $0 }
+            )
+            DashboardWeatherStatsGrid(
+                apparentTempF: model.apparentTempF,
+                currentTemp: model.currentTemp,
+                humidityPercent: model.humidityPercent,
+                windSpeedMph: model.windSpeedMph,
+                precipitationMm: model.precipitationMm,
+                todayPrecipitationChance: model.weatherData.first?.precipitationProbabilityMax,
+                useCelsius: useCelsius
+            )
+        }
+    }
+
+    private func previewUpdatedLabel(_ label: String) -> some View {
+        Text(label)
+            .font(.system(size: 12, weight: .medium, design: .rounded))
+            .foregroundStyle(.white.opacity(0.72))
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 20)
+            .padding(.top, 4)
+            .shadow(color: .black.opacity(0.35), radius: 2, y: 1)
+    }
+
+    @ViewBuilder
+    private var previewBottomTrailing: some View {
+        if !model.showLoadFailurePlaceholder {
+            VStack(alignment: .trailing, spacing: 10) {
+                DashboardUnitToggleButton(useCelsius: $useCelsius)
+                DashboardAIInsightButton {
+                    showForecastInsight = true
+                }
+            }
+            .padding(.trailing, 14)
+            .padding(.bottom, 10)
+        }
+    }
+
+    private var insightSheet: some View {
+        ForecastInsightSheet(
+            payload: ForecastInsightCopyBuilder.build(
+                model: model,
+                cityName: place.displayLine,
+                useCelsius: useCelsius,
+                unitSuffix: unitSuffix,
+                timeZoneIdentifier: place.timezone
+            )
+        )
+    }
+
+    private func dayDetailSheet(_ selected: WeatherDay) -> some View {
+        DayDetailView(
+            summary: selected,
+            hourly: model.hourlyItems(forDayId: selected.id, timeZoneIdentifier: place.timezone),
+            timeZoneIdentifier: place.timezone,
+            useCelsius: useCelsius,
+            cityName: place.displayLine,
+            humidityPercent: model.humidityPercent,
+            windSpeedMph: model.windSpeedMph,
+            longDateString: WeatherDateFormatting.longDateLabel(dayId: selected.id, timeZoneIdentifier: place.timezone)
+        )
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
+    }
+
+    private var previewRetryOverlay: some View {
+        DashboardTopRetryControl(
+            errorMessage: model.errorMessage,
+            isLoading: model.isLoading,
+            pendingManualRetryProgress: $model.pendingManualRetryProgress,
+            onRetry: {
+                await model.loadForecast(
+                    isManualRetry: true,
+                    latitude: place.latitude,
+                    longitude: place.longitude,
+                    timeZoneIdentifier: place.timezone
+                )
+            }
+        )
     }
 }

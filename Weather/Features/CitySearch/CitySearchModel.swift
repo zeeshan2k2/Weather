@@ -1,15 +1,17 @@
-
 import Combine
 import Foundation
 
+@MainActor
 final class CitySearchModel: ObservableObject {
     private let forecastRepository: any ForecastRepository
 
     @Published var searchText = ""
     @Published var results: [WeatherPlace] = []
     @Published var isSearching = false
-    /// Last completed search failed due to connectivity (don’t show “No matches”).
+
     @Published var lastSearchFailedOffline = false
+
+    private var debounceTask: Task<Void, Never>?
 
     init(forecastRepository: any ForecastRepository = RemoteForecastRepository()) {
         self.forecastRepository = forecastRepository
@@ -31,28 +33,41 @@ final class CitySearchModel: ObservableObject {
         trimmedQuery.count >= 2 && !isSearching && lastSearchFailedOffline
     }
 
-    func runDebouncedSearch() async {
-        let trimmed = trimmedQuery
-        if trimmed.count < 2 {
-            results = []
-            lastSearchFailedOffline = false
-            isSearching = false
-            return
-        }
-        try? await Task.sleep(nanoseconds: 400_000_000)
-        let latest = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard latest == trimmed, latest.count >= 2 else { return }
+    func scheduleSearchFromTextChange() {
+        debounceTask?.cancel()
+        debounceTask = Task { @MainActor in
+            let trimmed = trimmedQuery
+            if trimmed.count < 2 {
+                results = []
+                lastSearchFailedOffline = false
+                isSearching = false
+                return
+            }
+            try? await Task.sleep(nanoseconds: 320_000_000)
+            guard !Task.isCancelled else { return }
+            let latest = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard latest == trimmed, latest.count >= 2 else { return }
 
-        isSearching = true
-        defer { isSearching = false }
-        do {
-            results = try await forecastRepository.searchPlaces(query: PlaceSearchQuery(rawText: latest))
-            lastSearchFailedOffline = false
-        } catch {
-            if error is CancellationError { return }
-            if (error as? URLError)?.code == .cancelled { return }
-            results = []
-            lastSearchFailedOffline = WeatherPresentation.isLikelyConnectivityFailure(error)
+            isSearching = true
+            defer { isSearching = false }
+            do {
+                results = try await forecastRepository.searchPlaces(query: PlaceSearchQuery(rawText: latest))
+                lastSearchFailedOffline = false
+            } catch {
+                if error is CancellationError { return }
+                if (error as? URLError)?.code == .cancelled { return }
+                results = []
+                lastSearchFailedOffline = WeatherPresentation.isLikelyConnectivityFailure(error)
+            }
         }
+    }
+
+    func resetForDismiss() {
+        debounceTask?.cancel()
+        debounceTask = nil
+        searchText = ""
+        results = []
+        lastSearchFailedOffline = false
+        isSearching = false
     }
 }

@@ -1,10 +1,7 @@
-
 import Foundation
 
-/// Shared HTTP client: `URLSession`, status handling, optional JSON decode. Endpoints and DTOs live outside this type.
 enum APIManager {
 
-    /// Avoids `waitsForConnectivity` (default `true` on many OS versions), which can sit ~1–2s after Wi‑Fi/cellular toggles before firing.
     private static let session: URLSession = {
         let config = URLSessionConfiguration.default
         config.waitsForConnectivity = false
@@ -13,7 +10,6 @@ enum APIManager {
         return URLSession(configuration: config)
     }()
 
-    /// Typical connectivity / reachability failures (for offline-style UI).
     static func isLikelyConnectivityFailure(_ error: Error) -> Bool {
         guard let urlError = error as? URLError else { return false }
         switch urlError.code {
@@ -25,7 +21,6 @@ enum APIManager {
         }
     }
 
-    /// GET; returns body on HTTP 2xx, otherwise `URLError(.badServerResponse)`.
     static func get(url: URL) async throws -> Data {
         let (data, response) = try await session.data(from: url)
         guard let http = response as? HTTPURLResponse, (200 ... 299).contains(http.statusCode) else {
@@ -34,7 +29,6 @@ enum APIManager {
         return data
     }
 
-    /// GET + JSON decode on success.
     static func fetchDecodable<T: Decodable>(
         _ type: T.Type,
         from url: URL,

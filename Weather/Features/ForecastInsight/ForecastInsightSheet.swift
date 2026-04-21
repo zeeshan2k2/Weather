@@ -153,10 +153,9 @@ struct ForecastInsightSheet: View {
         }
     }
 
-    /// Removes em dash / double-hyphen typography that reads like a “double dash” in tight UI copy.
     private static func sanitizeInsightTypography(_ raw: String) -> String {
         var s = raw
-        // Em / figure dash (long “double dash” look in UI), not minus or range en dash.
+
         s = s.replacingOccurrences(of: "\u{2014}", with: ", ")
         s = s.replacingOccurrences(of: "\u{2015}", with: ", ")
         while s.contains("--") {

@@ -1,7 +1,5 @@
-
 import SwiftUI
 
-/// Palette / hierarchy for weather metric icons (`thermometer.medium`, `humidity.fill`, `wind`, `drop.fill`).
 enum WeatherMetricIconStyle: Equatable {
     case feelsLike
     case humidity
@@ -9,13 +7,12 @@ enum WeatherMetricIconStyle: Equatable {
     case precipitation
 }
 
-/// Matches previous sRGB values via `Color(hex:)` from `Color+Hex.swift`.
 private enum WeatherMetricIconPalette {
-    /// Thermometer “mercury” (was ~#D1332E).
+
     static let mercuryRed = Color(hex: "D1332E")
-    /// Deeper blue — precipitation `drop.fill` (was ~#61ADFA).
+
     static let precipitationDropBlue = Color(hex: "61ADFA")
-    /// Lighter blue — humidity droplet (was ~#94D1FA).
+
     static let humidityDropBlue = Color(hex: "94D1FA")
 }
 

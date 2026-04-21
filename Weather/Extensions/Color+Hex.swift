@@ -1,9 +1,7 @@
-
 import SwiftUI
 
 extension Color {
 
-    /// Hex string without or with `#`, 3/6/8 digits (8 = AARRGGBB).
     init(hex: String) {
         let cleaned = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var value: UInt64 = 0

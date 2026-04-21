@@ -24,13 +24,19 @@ struct WeatherTimelineProvider: TimelineProvider {
     private static func loadEntry() async -> WeatherWidgetEntry {
         let defaults = AppGroupWeatherDefaults.shared
         let useCelsius = defaults.bool(forKey: AppGroupWeatherDefaults.Key.useCelsius)
-        let city = defaults.string(forKey: AppGroupWeatherDefaults.Key.cityName) ?? "Cupertino, CA"
-        let latString = defaults.string(forKey: AppGroupWeatherDefaults.Key.latitude) ?? "37.3230"
-        let lonString = defaults.string(forKey: AppGroupWeatherDefaults.Key.longitude) ?? "-122.0322"
-        let tz = defaults.string(forKey: AppGroupWeatherDefaults.Key.timezone) ?? "America/Los_Angeles"
-
-        guard let lat = Double(latString), let lon = Double(lonString) else {
-            return WeatherWidgetEntry.invalidLocation(cityName: city, useCelsius: useCelsius)
+        guard
+            let city = defaults.string(forKey: AppGroupWeatherDefaults.Key.cityName),
+            !city.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+            let latString = defaults.string(forKey: AppGroupWeatherDefaults.Key.latitude),
+            let lonString = defaults.string(forKey: AppGroupWeatherDefaults.Key.longitude),
+            let tz = defaults.string(forKey: AppGroupWeatherDefaults.Key.timezone),
+            !tz.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+            TimeZone(identifier: tz) != nil,
+            let lat = Double(latString),
+            let lon = Double(lonString),
+            lat.isFinite, lon.isFinite
+        else {
+            return WeatherWidgetEntry.invalidLocation(cityName: "Weather", useCelsius: useCelsius)
         }
 
         do {

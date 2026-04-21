@@ -1,17 +1,15 @@
-
 import SwiftUI
 
 struct CitySearchView: View {
 
-    @StateObject private var model: CitySearchModel
+    @ObservedObject private var model: CitySearchModel
     @Environment(\.dismiss) private var dismiss
     var onSelectPlace: (WeatherPlace) -> Void
 
-    init(
-        forecastRepository: any ForecastRepository = RemoteForecastRepository(),
-        onSelectPlace: @escaping (WeatherPlace) -> Void
-    ) {
-        _model = StateObject(wrappedValue: CitySearchModel(forecastRepository: forecastRepository))
+    @State private var isSearchPresented = false
+
+    init(model: CitySearchModel, onSelectPlace: @escaping (WeatherPlace) -> Void) {
+        self.model = model
         self.onSelectPlace = onSelectPlace
     }
 
@@ -67,16 +65,27 @@ struct CitySearchView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
                     .padding(.bottom, 28)
-                    .animation(.spring(response: 0.45, dampingFraction: 0.86), value: model.results.count)
                 }
             }
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .searchable(text: $model.searchText, prompt: "City, town, or region")
+            .citySearchSearchable(text: $model.searchText, isPresented: $isSearchPresented, prompt: "City, town, or region")
             .tint(.white)
             .toolbar {
+                if #available(iOS 17.5, *) {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            isSearchPresented = true
+                        } label: {
+                            Image(systemName: "magnifyingglass")
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(.white)
+                        }
+                        .accessibilityLabel("Focus search")
+                    }
+                }
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
                         dismiss()
@@ -89,8 +98,26 @@ struct CitySearchView: View {
             }
         }
         .preferredColorScheme(.dark)
-        .task(id: model.searchText) {
-            await model.runDebouncedSearch()
+        .onAppear {
+            if #available(iOS 17.5, *) {
+                DispatchQueue.main.async {
+                    isSearchPresented = true
+                }
+            }
+        }
+        .onChange(of: model.searchText) { _ in
+            model.scheduleSearchFromTextChange()
+        }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func citySearchSearchable(text: Binding<String>, isPresented: Binding<Bool>, prompt: String) -> some View {
+        if #available(iOS 17.5, *) {
+            self.searchable(text: text, isPresented: isPresented, prompt: prompt)
+        } else {
+            self.searchable(text: text, prompt: prompt)
         }
     }
 }

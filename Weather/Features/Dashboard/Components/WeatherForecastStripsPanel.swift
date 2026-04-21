@@ -1,12 +1,9 @@
-
 import SwiftUI
 
-/// Layout constants for the frosted panel that wraps hourly + daily strips together.
 enum WeatherForecastStripsPanelLayout {
     static let horizontalContentPadding: CGFloat = 12
 }
 
-/// One frosted rectangle wrapping the hourly strip and the multi-day strip together (not per-cell chrome).
 struct WeatherForecastStripsPanel<Content: View>: View {
     var cornerRadius: CGFloat = 20
 

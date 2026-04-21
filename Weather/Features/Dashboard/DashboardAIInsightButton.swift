@@ -132,4 +132,3 @@ struct DashboardAIInsightButton: View {
         .accessibilityHint("Opens a short outlook for the next few hours.")
     }
 }
-

@@ -1,27 +1,21 @@
-
 import SwiftUI
 
 struct MainWeatherView: View {
-    
+
     var imageName: String
     var temperature: Int
     var unit: String = "F"
     var conditionText: String = ""
-    /// Display-unit “feels like” (already converted); same scale as `temperature`.
+
     var feelsLike: Int? = nil
-    
+
     var body: some View {
         VStack(spacing: 0) {
-            Image(systemName: imageName)
-                .renderingMode(.original)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            WeatherSkyConditionSymbol.resizableImage(systemName: imageName)
                 .frame(width: 160, height: 160)
                 .frame(height: 160, alignment: .top)
                 .clipped()
 
-            // Single block so spacing is even; large temp font still carries extra
-            // line metrics below the digits — trim that so condition sits closer.
             VStack(spacing: 6) {
                 Text("\(temperature)°\(unit)")
                     .font(.system(size: 68, weight: .medium, design: .rounded))

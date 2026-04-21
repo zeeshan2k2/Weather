@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 enum WeatherSkyStyle {
@@ -11,7 +10,6 @@ enum WeatherSkyStyle {
         case cool, mild, warm
     }
 
-    /// Top → bottom colors for a full-screen vertical gradient.
     static func gradientColors(weatherCode: Int, isDay: Bool, tempFahrenheit: Int) -> [Color] {
         let kind = skyKind(from: weatherCode)
         let bucket = tempBucket(tempFahrenheit)

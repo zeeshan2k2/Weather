@@ -1,8 +1,5 @@
-
 import Foundation
 
-/// Shared date parsing/formatting for Weather UI. Reuses `DateFormatter` instances; sets `timeZone` per call.
-/// Use from the main thread (SwiftUI).
 enum WeatherDateFormatting {
     private static let posix = Locale(identifier: "en_US_POSIX")
 
@@ -31,7 +28,6 @@ enum WeatherDateFormatting {
         return longDateOutput.string(from: date)
     }
 
-    /// `yyyy-MM-dd` for `date` in the given IANA timezone (matches daily / hourly `dayId` prefixes).
     static func calendarDayId(for date: Date, timeZoneIdentifier: String) -> String {
         let tz = timeZone(for: timeZoneIdentifier)
         var calendar = Calendar(identifier: .gregorian)
@@ -61,7 +57,6 @@ enum WeatherDateFormatting {
         return hour12h.string(from: date)
     }
 
-    /// Rough day/night for hourly icons (local solar day proxy).
     static func hourlyIsDaylight(timeISO: String, timeZoneIdentifier: String, fallbackIsDay: Bool) -> Bool {
         let tz = timeZone(for: timeZoneIdentifier)
         hourlyISOInput.timeZone = tz

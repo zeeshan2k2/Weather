@@ -1,19 +1,16 @@
-
 import SwiftUI
 
-/// Soft fade + animated chevron when a strip has more content off-screen to the right.
 struct StripScrollHintChevron: View {
     let isVisible: Bool
-    /// Horizontal padding **inside** a parent chrome (e.g. `WeatherForecastStripsPanel`). Shifts the hint so `trailingMarginFromOuter` is measured from the **outer** edge of that panel. Use `0` when the strip already fills the same width as the visible container (e.g. day detail).
+
     var parentHorizontalContentInset: CGFloat = 0
-    /// Trailing space from the **outer** edge of the shared container (frosted panel, day-detail column, etc.).
+
     var trailingMarginFromOuter: CGFloat = 3
 
-    /// Fade only; chevron sits to the right in clear space (better contrast than stacking).
     private static let highlightBarWidth: CGFloat = 48
     private static let chevronGap: CGFloat = 0
     private static let hintCornerRadius: CGFloat = 14
-    /// Trailing fade strength (dashboard hourly + daily strips, day-detail hourly strip).
+
     private static let fadeEndOpacity: Double = 0.060
 
     private var highlightGradient: LinearGradient {

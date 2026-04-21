@@ -1,7 +1,4 @@
-
 import SwiftUI
-
-// MARK: - Hero
 
 struct DayDetailHeroHeader: View {
     let summary: WeatherDay
@@ -39,10 +36,7 @@ struct DayDetailHeroHeader: View {
                 .foregroundStyle(.white.opacity(0.65))
                 .frame(maxWidth: .infinity)
 
-            Image(systemName: detailSymbol)
-                .renderingMode(.original)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            WeatherSkyConditionSymbol.resizableImage(systemName: detailSymbol)
                 .frame(width: 118, height: 118)
                 .scaleEffect(heroAppeared ? 1 : 0.62)
                 .opacity(heroAppeared ? 1 : 0)
@@ -91,8 +85,6 @@ struct DayDetailHeroHeader: View {
         .padding(.top, 8)
     }
 }
-
-// MARK: - At a glance
 
 struct DayDetailAtAGlanceSection: View {
     let summary: WeatherDay
@@ -179,16 +171,13 @@ struct DayDetailMetricRow: View {
     }
 }
 
-// MARK: - Hourly
-
-/// Matches dashboard hourly strip: exactly five columns visible; additional hours scroll horizontally.
 private enum DayDetailHourlyStripLayout {
     static let visibleColumnCount: CGFloat = 5
     static let columnSpacing: CGFloat = 12
     static let horizontalPadding: CGFloat = 6
     static let rowHeight: CGFloat = 96
     static let verticalPadding: CGFloat = 4
-    /// Trailing inset for `StripScrollHintChevron` from the day-detail column’s outer edge (dashboard uses 5).
+
     static let scrollHintTrailingMargin: CGFloat = 10
 
     static func columnWidth(containerWidth: CGFloat) -> CGFloat {
@@ -204,7 +193,7 @@ struct DayDetailHourlySection: View {
     let timeZoneIdentifier: String
     let unit: String
     var displayTemp: (Int) -> Int
-    /// Same idea as dashboard: inset of scroll content so the chevron’s 5pt margin is from the **outer** column edge.
+
     var parentHorizontalContentInset: CGFloat = 0
 
     var body: some View {
@@ -247,7 +236,7 @@ struct DayDetailHourlySection: View {
 
     @ViewBuilder
     private func hourlyColumn(hour: HourlyForecastItem, cellWidth: CGFloat) -> some View {
-        VStack(spacing: 6) {
+        VStack(alignment: .center, spacing: 6) {
             Text(WeatherDateFormatting.formattedHourLabel(timeISO: hour.timeISO, timeZoneIdentifier: timeZoneIdentifier))
                 .font(.system(size: 13, weight: .medium, design: .rounded))
                 .foregroundStyle(.white.opacity(0.85))
@@ -256,31 +245,30 @@ struct DayDetailHourlySection: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .frame(maxWidth: .infinity)
-            Image(systemName: WeatherPresentation.symbolName(
-                for: hour.weatherCode,
-                isDay: WeatherDateFormatting.hourlyIsDaylight(
-                    timeISO: hour.timeISO,
-                    timeZoneIdentifier: timeZoneIdentifier,
-                    fallbackIsDay: true
+            WeatherSkyConditionSymbol.resizableImage(
+                systemName: WeatherPresentation.symbolName(
+                    for: hour.weatherCode,
+                    isDay: WeatherDateFormatting.hourlyIsDaylight(
+                        timeISO: hour.timeISO,
+                        timeZoneIdentifier: timeZoneIdentifier,
+                        fallbackIsDay: true
+                    )
                 )
-            ))
-            .symbolRenderingMode(.multicolor)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+            )
             .frame(width: 28, height: 28)
-            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
             Text("\(displayTemp(hour.tempF))°\(unit)")
                 .font(.system(size: 16, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.4), radius: 2, y: 1)
+                .multilineTextAlignment(.center)
                 .lineLimit(1)
                 .minimumScaleFactor(0.85)
+                .frame(maxWidth: .infinity)
         }
         .frame(width: cellWidth)
     }
 }
-
-// MARK: - Sunrise / sunset
 
 struct DayDetailSunriseSunsetRow: View {
     let sunriseISO: String?
